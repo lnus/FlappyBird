@@ -82,12 +82,12 @@ class Flappy:
         self.surface.fill(self.background)
         self.bgimage = pygame.transform.scale(BACKGROUND, (1080,760))
         self.ground = pygame.transform.scale(GROUND, (1080,112))
-        self.player = Bird(self.surface, (WIDTH/2)-20,HEIGHT/2)
+        self.player = Bird(self.surface, (WIDTH/2)-20,HEIGHT/2-60)
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Flapper")
 
     def restart(self):
-        self.player = Bird(self.surface, (WIDTH/2)-20,HEIGHT/2)
+        self.player = Bird(self.surface, (WIDTH/2)-20,HEIGHT/2-60)
         self.tubes = []
         self.points = 0
 
