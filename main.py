@@ -38,6 +38,8 @@ class Bird:
         self.collided = False
         self.x = x
         self.y = y
+        self.animationtimer = 0
+        self.sprite = 1
         self.rect = pygame.Rect((self.x, self.y-2), (30, 20))
         self.fallingspeed = 0
         self.upwardspeed = 0
@@ -53,10 +55,20 @@ class Bird:
             self.upwardspeed -= 1
 
     def draw(self):
-        #TODO: Animate the bird
-        drawing = pygame.transform.rotate(BIRD, self.rotation)
+        self.animationtimer += 1
+        if self.animationtimer >= 10 and not self.dead:
+            self.sprite += 1
+            if self.sprite >= 3:
+                self.sprite = 0
+            self.animationtimer = 0    
+        if self.sprite == 0:
+            drawing = pygame.transform.rotate(BIRD0, self.rotation)
+        elif self.sprite == 1:
+            drawing = pygame.transform.rotate(BIRD1, self.rotation)
+        else:
+            drawing = pygame.transform.rotate(BIRD2, self.rotation)
         self.surface.blit(drawing, (self.x, self.y))
-        pygame.draw.rect(self.surface, self.rectcolor, self.rect)
+        #pygame.draw.rect(self.surface, self.rectcolor, self.rect)
 
 class Flappy:
     def __init__(self):
@@ -85,7 +97,7 @@ class Flappy:
             if self.tubetimer >= 180/TUBEFREQ:
                 self.tubetimer = 0
                 tubeheight = randint(-100,100)
-                tubeoffset = randint(20, 50)
+                tubeoffset = randint(15, 60)
                 self.tubes.append(Tube(self.surface, WIDTH, ((HEIGHT/2)-tubeheight)+tubeoffset, 0, tubeoffset, True))
                 self.tubes.append(Tube(self.surface, WIDTH, ((0-tubeheight)-320)-tubeoffset, 1, tubeoffset, False))
             self.event()

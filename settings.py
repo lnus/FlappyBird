@@ -6,7 +6,9 @@ HEIGHT = 760
 FPS = 60
 
 #Asset settings
-BIRD = pygame.image.load("assets/bird.png")
+BIRD0 = pygame.image.load("assets/bird0.png")
+BIRD1 = pygame.image.load("assets/bird1.png")
+BIRD2 = pygame.image.load("assets/bird2.png")
 BACKGROUND = pygame.image.load("assets/bg.png")
 TUBE = pygame.image.load("assets/tube.png")
 TUBE2 = pygame.image.load("assets/tube2.png")
