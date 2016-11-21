@@ -19,5 +19,5 @@ GAMEOVER = pygame.image.load("assets/gameover.png")
 GRAVITY = 0.5 
 JUMPHEIGHT = 50 
 TUBESPEED = 5
-TUBEFREQ = 100
+TUBEFREQ = 3
 GODMODE = True 
