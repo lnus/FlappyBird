@@ -28,12 +28,13 @@ class Flappy:
         self.points = 0
 
     def mainloop(self):
+	#TODO: Optimize the tubes
         while True:
             self.tubetimer += 1
             if self.tubetimer >= 180/TUBEFREQ:
                 self.tubetimer = 0
                 tubeheight = randint(-100,100)
-                tubeoffset = randint(15, 60)
+                tubeoffset = randint(25, 50)
                 self.tubes.append(Tube(self.surface, WIDTH, ((HEIGHT/2)-tubeheight)+tubeoffset, 0, tubeoffset, True))
                 self.tubes.append(Tube(self.surface, WIDTH, ((0-tubeheight)-320)-tubeoffset, 1, tubeoffset, False))
             self.event()
