@@ -1,6 +1,8 @@
 import pygame
 from random import *
 from settings import *
+from tube import *
+from bird import *
 
 pygame.init()
 
