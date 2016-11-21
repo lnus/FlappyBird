@@ -113,7 +113,7 @@ class Flappy:
 
     def tubeCollision(self):
         for tube in self.tubes:
-            if tube.rect.colliderect(self.player.rect):
+            if tube.rect.colliderect(self.player.rect) and not GODMODE:
                 self.player.collided = True
 
     def outOfBounds(self):
@@ -125,7 +125,8 @@ class Flappy:
             return False
 
     def dead(self):
-        self.player.dead = True
+        if not GODMODE:
+            self.player.dead = True
 
     def event(self):    
         self.tubeCollision()
