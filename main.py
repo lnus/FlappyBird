@@ -41,29 +41,6 @@ class Flappy:
             pygame.display.update()
             self.clock.tick(FPS)
 
-    def applyGravity(self):
-        if self.player.rotation >= -60: 
-            self.player.rotation -= 1.5 
-        if self.player.fallingspeed < 100 and self.player.upwardspeed <= 0:    
-            self.player.fallingspeed += GRAVITY    
-
-    def tubeCollision(self):
-        for tube in self.tubes:
-            if tube.rect.colliderect(self.player.rect) and not GODMODE:
-                self.player.collided = True
-
-    def outOfBounds(self):
-        if self.player.y <= 0:
-            return True
-        elif self.player.y >= HEIGHT-105:
-            return True
-        else:
-            return False
-
-    def dead(self):
-        if not GODMODE:
-            self.player.dead = True
-
     def event(self):    
         self.tubeCollision()
         self.deleteTubes()
@@ -89,6 +66,45 @@ class Flappy:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.player.dead:
                 #RESTART
                 self.restart()
+                
+    def draw(self):
+        font = pygame.font.Font("assets/flappy.TTF", 36)
+        points = font.render("{}".format(self.points), 1, (255,255,255))
+        outline = font.render("{}".format(self.points), 1, (0,0,0))
+        self.groundMovement()
+        self.backgroundMovement()
+        self.surface.blit(self.bgimage, (self.backgroundstep,0))
+        for tube in self.tubes:
+            tube.draw()
+        self.surface.blit(self.ground, (self.groundstep,HEIGHT-70))
+        self.surface.blit(outline, ((WIDTH/2)+1, 61))
+        self.surface.blit(points, (WIDTH/2, 60))
+        self.player.draw()
+        if self.player.dead:
+            self.surface.blit(GAMEOVER, ((WIDTH/2)-96, 140))
+            
+    def applyGravity(self):
+        if self.player.rotation >= -60: 
+            self.player.rotation -= 1.5 
+        if self.player.fallingspeed < 100 and self.player.upwardspeed <= 0:    
+            self.player.fallingspeed += GRAVITY    
+
+    def tubeCollision(self):
+        for tube in self.tubes:
+            if tube.rect.colliderect(self.player.rect) and not GODMODE:
+                self.player.collided = True
+
+    def outOfBounds(self):
+        if self.player.y <= 0:
+            return True
+        elif self.player.y >= HEIGHT-105:
+            return True
+        else:
+            return False
+
+    def dead(self):
+        if not GODMODE:
+            self.player.dead = True
 
     def addPoints(self):
         #TODO: Add a sound when point is added
@@ -117,22 +133,6 @@ class Flappy:
             self.backgroundstep = 0
         else:
             self.backgroundstep -= 1
-
-    def draw(self):
-        font = pygame.font.Font("assets/flappy.TTF", 36)
-        points = font.render("{}".format(self.points), 1, (255,255,255))
-        outline = font.render("{}".format(self.points), 1, (0,0,0))
-        self.groundMovement()
-        self.backgroundMovement()
-        self.surface.blit(self.bgimage, (self.backgroundstep,0))
-        for tube in self.tubes:
-            tube.draw()
-        self.surface.blit(self.ground, (self.groundstep,HEIGHT-70))
-        self.surface.blit(outline, ((WIDTH/2)+1, 61))
-        self.surface.blit(points, (WIDTH/2, 60))
-        self.player.draw()
-        if self.player.dead:
-            self.surface.blit(GAMEOVER, ((WIDTH/2)-96, 140))
 
 game = Flappy()
 game.mainloop()
