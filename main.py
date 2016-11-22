@@ -43,14 +43,10 @@ class Flappy:
             self.clock.tick(FPS)
 
     def event(self):    
-        self.tubeCollision()
-        self.deleteTubes()
-        self.addPoints()
+        self.tubeController()
         self.applyGravity()
         if self.outOfBounds(): self.dead() 
         self.player.event()
-        for tube in self.tubes:
-            tube.event(self.player.dead, self.player.collided)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -58,12 +54,11 @@ class Flappy:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and not self.player.dead and not self.player.collided:
                 #JUMP
                 #TODO: Add sound when jumping
-                for i in range(JUMPHEIGHT*2):
-                    self.player.fallingspeed = 0
-                    if self.player.rotation <= 10:
-                        for i in range(30):
-                            self.player.rotation += 1
-                        self.player.upwardspeed = 12 
+                self.player.fallingspeed = 0
+                if self.player.rotation <= 10:
+                    self.player.upwardspeed = 12 
+                    for i in range(30):
+                        self.player.rotation += 1
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.player.dead:
                 #RESTART
                 self.restart()
@@ -84,16 +79,32 @@ class Flappy:
         if self.player.dead:
             self.surface.blit(GAMEOVER, ((WIDTH/2)-96, 140))
             
+    def tubeController(self):
+        for tube in self.tubes:
+            self.tubeCollision(tube)
+            self.deleteTubes(tube)
+            self.addPoints(tube)
+            tube.event(self.player.dead, self.player.collided)
+
+    def deleteTubes(self, tube):
+        if tube.x <= -50:
+            self.tubes.remove(tube)
+
+    def tubeCollision(self, tube):
+        if tube.rect.colliderect(self.player.rect) and not GODMODE:
+            self.player.collided = True
+
+    def addPoints(self, tube):
+        #TODO: Add a sound when point is added
+        if tube.x == WIDTH/2 and tube.eligible:
+            tube.eligible = False
+            self.points += 1
+
     def applyGravity(self):
         if self.player.rotation >= -60: 
             self.player.rotation -= 1.5 
         if self.player.fallingspeed < 100 and self.player.upwardspeed <= 0:    
             self.player.fallingspeed += GRAVITY    
-
-    def tubeCollision(self):
-        for tube in self.tubes:
-            if tube.rect.colliderect(self.player.rect) and not GODMODE:
-                self.player.collided = True
 
     def outOfBounds(self):
         if self.player.y <= 0:
@@ -106,18 +117,6 @@ class Flappy:
     def dead(self):
         if not GODMODE:
             self.player.dead = True
-
-    def addPoints(self):
-        #TODO: Add a sound when point is added
-        for tube in self.tubes:
-            if tube.x == WIDTH/2 and tube.eligible:
-                tube.eligible = False
-                self.points += 1
-
-    def deleteTubes(self):
-        for tube in self.tubes:
-            if tube.x <= -50:
-                self.tubes.remove(tube)
 
     def groundMovement(self):
         if self.player.dead or self.player.collided:
